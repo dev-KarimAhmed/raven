@@ -7,9 +7,18 @@ import { toast } from 'sonner-native';
 import { useSetAtom } from 'jotai';
 import { selectedWorkspaceFamily } from './useGetCurrentWorkspace';
 import useSiteContext from './useSiteContext';
-import { getMessaging } from '@react-native-firebase/messaging';
+import { Platform } from 'react-native';
 
-const messaging = getMessaging()
+let messaging: any = null;
+// Only initialize Firebase messaging on native platforms
+if (Platform.OS !== 'web') {
+    try {
+        const { getMessaging } = require('@react-native-firebase/messaging');
+        messaging = getMessaging();
+    } catch (error) {
+        // Firebase messaging not available
+    }
+}
 
 
 export const useLogout = () => {
@@ -23,13 +32,15 @@ export const useLogout = () => {
         // Revoke the token
         // Redirect to the landing page
         try {
-            messaging.getToken().then((token) => {
-                if (token) {
-                    call.post('raven.api.notification.unsubscribe', {
-                        fcm_token: token
-                    })
-                }
-            })
+            if (messaging) {
+                messaging.getToken().then((token: string) => {
+                    if (token) {
+                        call.post('raven.api.notification.unsubscribe', {
+                            fcm_token: token
+                        })
+                    }
+                })
+            }
         } catch (error) {
             console.error(error)
         }

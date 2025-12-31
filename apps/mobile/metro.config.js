@@ -28,6 +28,9 @@ module.exports = (() => {
         assetExts: resolver.assetExts.filter((ext) => ext !== "svg"),
         sourceExts: [...resolver.sourceExts, "svg"],
         nodeModulesPaths: [path.resolve(projectRoot, 'node_modules'), path.resolve(monorepoRoot, 'node_modules')],
+        extraNodeModules: {
+            'react-native': require.resolve('react-native'),
+        },
     };
 
     // Wrap the updated config with NativeWind and add options
