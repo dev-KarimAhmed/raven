@@ -13,7 +13,7 @@ export default function LandingScreen() {
             <Stack.Screen options={{ title: 'Sites', headerShown: false }} />
             <SafeAreaView className='flex-1 bg-background'>
                 <View className='flex-1 justify-center h-screen pt-24 px-6 gap-3 bg-background'>
-                    <Text className='text-5xl font-cal-sans text-foreground'>raven</Text>
+                    <Text className='text-5xl font-cal-sans text-foreground'>Beam</Text>
                     <View className='h-2' />
                     <SitesList />
                     <AddSite />

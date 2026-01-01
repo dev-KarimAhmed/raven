@@ -5,7 +5,7 @@ export default function InitialScreen() {
 
     return (
         <>
-            <Stack.Screen options={{ title: 'Raven' }} />
+            <Stack.Screen options={{ title: 'Beam' }} />
             <FullPageLoader />
         </>
     );

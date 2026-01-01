@@ -11,9 +11,9 @@
         --card-foreground: 8 28 30;
         --popover: 230 230 235;
         --popover-foreground: 0 0 0;
-        --primary: 87, 83, 198;
+        --primary: 77, 163, 255;
         --primary-foreground: 255 255 255;
-        --secondary: 120, 123, 227;
+        --secondary: 226, 232, 240;
         --secondary-foreground: 255 255 255;
         --muted: 175 176 180;
         --muted-foreground: 98 98 103;
@@ -39,9 +39,9 @@
         --android-card-foreground: 8 28 30;
         --android-popover: 230 230 235;
         --android-popover-foreground: 0 0 0;
-        --android-primary: 87, 83, 198;
+        --android-primary: 77, 163, 255;
         --android-primary-foreground: 255 255 255;
-        --android-secondary: 120, 123, 227;
+        --android-secondary: 226, 232, 240;
         --android-secondary-foreground: 255 255 255;
         --android-muted: 175 176 180;
         --android-muted-foreground: 98 98 103;
@@ -70,9 +70,9 @@
             --card-foreground: 255 255 255;
             --popover: 40 40 42;
             --popover-foreground: 255 255 255;
-            --primary: 91, 91, 214;
+            --primary: 91, 159, 219;
             --primary-foreground: 255 255 255;
-            --secondary: 120, 123, 227;
+            --secondary: 15, 23, 42;
             --secondary-foreground: 255 255 255;
             --muted: 70 70 73;
             --muted-foreground: 187 187 187;
@@ -98,9 +98,9 @@
             --android-card-foreground: 255 255 255;
             --android-popover: 40 40 42;
             --android-popover-foreground: 255 255 255;
-            --android-primary: 91, 91, 214;
+            --android-primary: 91, 159, 219;
             --android-primary-foreground: 255 255 255;
-            --android-secondary: 120, 123, 227;
+            --android-secondary: 15, 23, 42;
             --android-secondary-foreground: 255 255 255;
             --android-muted: 70 70 73;
             --android-muted-foreground: 187 187 187;

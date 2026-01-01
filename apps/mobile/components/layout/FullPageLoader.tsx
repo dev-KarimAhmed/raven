@@ -6,7 +6,7 @@ type Props = {
     description?: string
 }
 
-const FullPageLoader = ({ title = 'raven', description = 'Setting up your workspace...' }: Props) => {
+const FullPageLoader = ({ title = 'Beam', description = 'Setting up your workspace...' }: Props) => {
     return (
         <View className="flex-1 bg-background justify-center items-center gap-2">
             <Text className="text-4xl text-foreground font-cal-sans">{title}</Text>

@@ -6,6 +6,7 @@ import React, { useEffect, useRef } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { setNavigationBar, themeAtom } from '@hooks/useColorScheme';
+import { useColorScheme } from '@hooks/useColorScheme';
 import { NAV_THEME } from '@theme/index';
 import { StatusBar } from 'expo-status-bar';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
@@ -21,7 +22,7 @@ import timezone from 'dayjs/plugin/timezone'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useAtom } from 'jotai';
-import { useColorScheme } from 'nativewind';
+import { useColorScheme as useNativewindColorScheme } from 'nativewind';
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -139,41 +140,50 @@ export default function RootLayout() {
         };
     }, []);
 
-    const { colorScheme, setColorScheme } = useColorScheme();
-
-    const isDarkColorScheme = colorScheme === 'dark'
+    const { colorScheme: nativewindColorScheme, setColorScheme: setNativewindColorScheme } = useNativewindColorScheme();
+    const { colorScheme, setColorScheme, isDarkColorScheme } = useColorScheme();
 
     const [theme] = useAtom(themeAtom);
+
+    // Determine the effective color scheme for ThemeProvider (must be 'light' or 'dark')
+    const effectiveColorScheme: 'light' | 'dark' = colorScheme === 'system' ? (nativewindColorScheme ?? 'light') : (colorScheme as 'light' | 'dark' | undefined) ?? 'light';
+    const effectiveIsDarkColorScheme = effectiveColorScheme === 'dark' || isDarkColorScheme;
 
     useEffect(() => {
         if (Platform.OS === 'web') return; // Skip color scheme setting on web
         if (theme.state === 'hasData') {
-            if (theme.data) {
-                setColorScheme(theme.data);
+            if (theme.data && theme.data !== 'system') {
+                setNativewindColorScheme(theme.data);
+            } else if (theme.data === 'system') {
+                // Reset to system default
+                const systemColorScheme = nativewindColorScheme;
+                if (systemColorScheme) {
+                    setNativewindColorScheme(systemColorScheme);
+                }
             }
         }
-    }, [theme, setColorScheme]);
+    }, [theme, setNativewindColorScheme, nativewindColorScheme]);
 
     useEffect(() => {
-        if (Platform.OS !== 'android' || !colorScheme) return;
+        if (Platform.OS !== 'android' || !effectiveColorScheme) return;
         try {
-            setNavigationBar(colorScheme)
+            setNavigationBar(effectiveColorScheme)
         } catch (error) {
             console.error('useColorScheme.tsx", "setColorScheme', error);
         }
-    }, [colorScheme])
+    }, [effectiveColorScheme])
 
     return (
         <>
             <StatusBar
-                key={`root-status-bar-${isDarkColorScheme ? 'light' : 'dark'}`}
-                style={isDarkColorScheme ? 'light' : 'dark'}
+                key={`root-status-bar-${effectiveIsDarkColorScheme ? 'light' : 'dark'}`}
+                style={effectiveIsDarkColorScheme ? 'light' : 'dark'}
             />
             <GestureHandlerRootView style={{ flex: 1 }}>
                 <BottomSheetModalProvider>
                     <ActionSheetProvider>
                         <KeyboardProvider statusBarTranslucent navigationBarTranslucent>
-                            <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
+                            <ThemeProvider value={NAV_THEME[effectiveColorScheme]}>
                                 <ErrorBoundary>
                                     <Slot />
                                 </ErrorBoundary>
@@ -189,7 +199,7 @@ export default function RootLayout() {
                     closeButton={true}
                     toastOptions={{}}
                     pauseWhenPageIsHidden
-                    theme={isDarkColorScheme ? 'dark' : 'light'}
+                    theme={effectiveIsDarkColorScheme ? 'dark' : 'light'}
                     swipeToDismissDirection='up'
                 />
             </GestureHandlerRootView>

@@ -49,10 +49,10 @@ export default function Profile() {
                         </View>
                         <LogOutButton />
                         <View className='flex flex-col justify-center items-center pt-2 gap-1'>
-                            <Text className='text-lg text-muted-foreground/90 font-cal-sans'>raven</Text>
+                            <Text className='text-lg text-muted-foreground/90 font-cal-sans'>Beam</Text>
                             <View className='flex flex-col items-center justify-center'>
-                                <Text className='text-xs text-muted-foreground/80'>by The Commit Company</Text>
-                                <Text className='text-xs text-muted-foreground/80'>Version {nativeApplicationVersion} ({nativeBuildVersion})</Text>
+                                <Text className='text-xs text-muted-foreground/80'>Mjara</Text>
+                                <Text className='text-xs text-muted-foreground/80'>Version 1.0.0</Text>
                             </View>
                         </View>
                     </View>

@@ -209,8 +209,8 @@ const getLogo = (workspace: WorkspaceFields) => {
 
     let logo = workspace?.logo || undefined
 
-    if (!logo && workspace?.workspace_name === 'Raven') {
-        logo = '/assets/raven/raven-logo.png'
+    if (!logo && workspace?.workspace_name === 'Beam') {
+        logo = '/assets/beam/beam-logo.png'
     }
 
     return logo

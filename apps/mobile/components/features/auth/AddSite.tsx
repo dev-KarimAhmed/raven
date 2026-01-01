@@ -92,7 +92,7 @@ const AddSite = ({ useBottomSheet = false }: Props) => {
                         numberOfLines={1}
                         inputMode='url'
                         autoCapitalize='none'
-                        placeholder='raven.frappe.cloud'
+                        placeholder='beam.frappe.cloud'
                         placeholderTextColor={colors.grey2}
                         autoCorrect={false}
                         autoComplete='off'
@@ -105,7 +105,7 @@ const AddSite = ({ useBottomSheet = false }: Props) => {
                         numberOfLines={1}
                         inputMode='url'
                         autoCapitalize='none'
-                        placeholder='raven.frappe.cloud'
+                        placeholder='beam.frappe.cloud'
                         placeholderTextColor={colors.grey2}
                         autoCorrect={false}
                         autoComplete='off'
