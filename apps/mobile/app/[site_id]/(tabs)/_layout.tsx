@@ -203,6 +203,8 @@ export default function TabLayout() {
                     tabBarItemStyle: {
                         paddingVertical: 4,
                     },
+                    // Smooth screen transition animations
+                    animation: 'fade',
                 }}
             >
                 <Tabs.Screen
