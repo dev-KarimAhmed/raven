@@ -19,6 +19,9 @@ import DMRowItem from '@components/common/CommonListItems/DMRowItem';
 import { Text } from '@components/nativewindui/Text';
 import { LegendList } from '@legendapp/list';
 
+// Type for combined list items - use simple intersection with separate type field
+type CombinedListItem = (ChannelListItem & { type: 'channel' }) | (DMChannelListItem & { type: 'dm'; user: ReturnType<typeof useGetUser> });
+
 export default function QuickSearch() {
 
     const { colors } = useColorScheme()
@@ -78,14 +81,14 @@ export default function QuickSearch() {
                 />
             </View>
             <LegendList
-                data={combinedList}
-                keyExtractor={(item) => item.name}
+                data={combinedList as any[]}
+                keyExtractor={(item: any) => item.name}
                 estimatedItemSize={42}
-                renderItem={({ item }) =>
+                renderItem={({ item }: { item: any }) =>
                     item.type === 'channel' ? (
-                        <ChannelRowItem key={item.name} channel={item as ChannelListItem} onPress={onChannelPress} />
+                        <ChannelRowItem key={item.name} channel={item} onPress={onChannelPress} />
                     ) : (
-                        <DMRowItem key={item.name} dmChannel={item as DMChannelListItem} onPress={onChannelPress} />
+                        <DMRowItem key={item.name} dmChannel={item} onPress={onChannelPress} />
                     )
                 }
                 contentContainerStyle={{ paddingBottom: 180 }}
@@ -112,14 +115,14 @@ export const useCombinedChannelAndDMList = (searchQuery: string) => {
     // Filter channels
     const filteredChannels = channels
         .filter(channel => channel.channel_name.toLowerCase().includes(debouncedSearchQuery.toLowerCase()))
-        .map(channel => ({ ...channel, type: 'channel' }))
+        .map(channel => ({ ...channel, type: 'channel' as const }))
 
     // Filter DMs
     const filteredDms = dmChannels
         .map(dm => ({
             ...dm,
             user: useGetUser(dm.peer_user_id),
-            type: 'dm',
+            type: 'dm' as const,
         }))
         .filter(dm => dm.user?.full_name?.toLowerCase().includes(debouncedSearchQuery.toLowerCase()))
 
