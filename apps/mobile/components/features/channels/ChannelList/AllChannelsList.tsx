@@ -7,6 +7,7 @@ import { useGetChannelUnreadCounts } from "@raven/lib/hooks/useGetChannelUnreadC
 import useUnreadMessageCount from "@hooks/useUnreadMessageCount"
 import DMList from "../DMList/DMList"
 import ChannelsList from "./ChannelsList"
+import Animated, { FadeInDown } from 'react-native-reanimated'
 
 const AllChannelsList = ({ workspace }: { workspace: string }) => {
 
@@ -25,10 +26,20 @@ const AllChannelsList = ({ workspace }: { workspace: string }) => {
 
     return (
         <View className="flex-1">
-            {unread_count && <UnreadChannelsList unreadChannels={unreadChannels} unreadDMs={unreadDMs} />}
-            <PinnedChannelsList channels={readChannels} />
-            <ChannelsList channels={readChannels} />
-            <DMList dms={readDMs} />
+            {unread_count && (
+                <Animated.View entering={FadeInDown.delay(100).duration(400)}>
+                    <UnreadChannelsList unreadChannels={unreadChannels} unreadDMs={unreadDMs} />
+                </Animated.View>
+            )}
+            <Animated.View entering={FadeInDown.delay(200).duration(400)}>
+                <PinnedChannelsList channels={readChannels} />
+            </Animated.View>
+            <Animated.View entering={FadeInDown.delay(300).duration(400)}>
+                <ChannelsList channels={readChannels} />
+            </Animated.View>
+            <Animated.View entering={FadeInDown.delay(400).duration(400)}>
+                <DMList dms={readDMs} />
+            </Animated.View>
         </View>
     )
 }

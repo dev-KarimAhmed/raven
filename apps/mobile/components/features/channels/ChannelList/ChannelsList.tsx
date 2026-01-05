@@ -1,15 +1,15 @@
 import { Divider } from '@components/layout/Divider';
 import { ChannelListItem } from '@raven/types/common/ChannelListItem';
 import { useMemo, useState } from 'react';
-import { View, TouchableOpacity, Pressable, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Pressable } from 'react-native';
 import { Text } from '@components/nativewindui/Text';
-import ChevronDownIcon from '@assets/icons/ChevronDownIcon.svg';
-import ChevronRightIcon from '@assets/icons/ChevronRightIcon.svg';
+import { ChevronDown, ChevronRight, Plus, Hash } from 'lucide-react-native';
 import { useColorScheme } from '@hooks/useColorScheme';
 import { router } from 'expo-router';
-import PlusIcon from '@assets/icons/PlusIcon.svg';
 import { ChannelListRow } from './ChannelListRow';
 import useCurrentRavenUser from '@raven/lib/hooks/useCurrentRavenUser';
+import { AnimatedPressableScale } from '@components/common/AnimatedComponents';
+import Animated, { FadeIn } from 'react-native-reanimated';
 
 const ChannelsList = ({ channels }: { channels: ChannelListItem[] }) => {
 
@@ -29,69 +29,88 @@ const ChannelsList = ({ channels }: { channels: ChannelListItem[] }) => {
 export const ChannelListUI = ({ channels }: { channels: ChannelListItem[] }) => {
 
     const [isExpanded, setIsExpanded] = useState(true)
-    const { colors } = useColorScheme()
+    const { colors, colorScheme } = useColorScheme()
+    const isDark = colorScheme === 'dark'
 
     const toggleAccordion = () => {
         setIsExpanded((prev) => !prev)
     }
 
     return (
-        <View style={styles.container}>
-            <TouchableOpacity onPress={toggleAccordion} style={styles.header} activeOpacity={0.7}>
-                <Text style={styles.headerText}>Channels</Text>
+        <View className="px-3 py-2">
+            {/* Header */}
+            <TouchableOpacity
+                onPress={toggleAccordion}
+                activeOpacity={0.7}
+                className="flex-row justify-between items-center py-3 px-2"
+            >
+                <View className="flex-row items-center gap-2">
+                    <View
+                        className="p-1.5 rounded-lg"
+                        style={{
+                            backgroundColor: isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.04)',
+                        }}
+                    >
+                        <Hash size={16} color={isDark ? '#a1a1aa' : '#71717a'} strokeWidth={2.5} />
+                    </View>
+                    <Text className="font-semibold text-base text-foreground">Channels</Text>
+                    <View
+                        className="px-1.5 py-0.5 rounded-md"
+                        style={{
+                            backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.05)',
+                        }}
+                    >
+                        <Text className="text-xs text-muted-foreground font-medium">{channels.length}</Text>
+                    </View>
+                </View>
                 <View className="flex-row items-center gap-1">
                     <Pressable
                         hitSlop={10}
-                        className='active:bg-card-background px-1.5 py-1 rounded-lg'
-                        onPress={() => router.push('../home/create-channel', { relativeToDirectory: true })}>
-                        <PlusIcon fill={colors.icon} height={20} width={20} />
+                        className='p-2 rounded-lg active:bg-card'
+                        onPress={() => router.push('../home/create-channel', { relativeToDirectory: true })}
+                    >
+                        <Plus size={18} color={colors.icon} strokeWidth={2} />
                     </Pressable>
-                    {isExpanded ? <ChevronDownIcon fill={colors.icon} /> : <ChevronRightIcon fill={colors.icon} />}
+                    {isExpanded
+                        ? <ChevronDown size={20} color={colors.icon} strokeWidth={2} />
+                        : <ChevronRight size={20} color={colors.icon} strokeWidth={2} />
+                    }
                 </View>
             </TouchableOpacity>
-            {isExpanded && <>
-                {channels.map((channel) => <ChannelListRow key={channel.name} channel={channel} />)}
-                <Pressable style={styles.addChannelButton} className='ios:active:bg-linkColor'
-                    onPress={() => router.push('../home/create-channel', { relativeToDirectory: true })}>
-                    <PlusIcon fill={colors.icon} height={18} width={18} />
-                    <Text style={styles.addChannelText}>Add channel</Text>
-                </Pressable>
-            </>}
+
+            {/* Channel List */}
+            {isExpanded && (
+                <Animated.View entering={FadeIn.duration(200)} className="gap-0.5">
+                    {channels.map((channel) => (
+                        <ChannelListRow key={channel.name} channel={channel} />
+                    ))}
+
+                    {/* Add Channel Button */}
+                    <AnimatedPressableScale
+                        scaleValue={0.98}
+                        onPress={() => router.push('../home/create-channel', { relativeToDirectory: true })}
+                        className="flex-row items-center gap-3 py-2.5 px-3 mt-1 rounded-xl"
+                        style={{
+                            backgroundColor: isDark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.02)',
+                        }}
+                    >
+                        <View
+                            className="w-8 h-8 rounded-lg items-center justify-center"
+                            style={{
+                                backgroundColor: isDark ? 'rgba(91, 159, 219, 0.15)' : 'rgba(77, 163, 255, 0.1)',
+                                borderWidth: 1,
+                                borderColor: isDark ? 'rgba(91, 159, 219, 0.2)' : 'rgba(77, 163, 255, 0.15)',
+                                borderStyle: 'dashed',
+                            }}
+                        >
+                            <Plus size={16} color={colors.primary} strokeWidth={2} />
+                        </View>
+                        <Text className="text-primary font-medium text-base">Add channel</Text>
+                    </AnimatedPressableScale>
+                </Animated.View>
+            )}
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        padding: 10,
-    },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingVertical: 12,
-        paddingHorizontal: 10,
-    },
-    headerText: {
-        fontWeight: '600',
-        fontSize: 16,
-    },
-    channelText: {
-        marginLeft: 12,
-        fontSize: 16,
-    },
-    addChannelButton: {
-        flexDirection: 'row',
-        gap: 0,
-        alignItems: 'center',
-        paddingVertical: 10,
-        paddingHorizontal: 12,
-        borderRadius: 10,
-    },
-    addChannelText: {
-        marginLeft: 12,
-        fontSize: 16,
-    },
-})
 
 export default ChannelsList

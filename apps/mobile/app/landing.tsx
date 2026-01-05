@@ -14,10 +14,10 @@ export default function LandingScreen() {
     const { colorScheme } = useColorScheme();
     const isDark = colorScheme === 'dark';
 
-    // Premium gradient colors
+    // Premium gradient colors - Zinc for dark, Slate for light
     const gradientColors = isDark
-        ? ['#0a0a0a', '#121218', '#1a1a24'] as const
-        : ['#ffffff', '#f8fafc', '#f0f4ff'] as const;
+        ? ['#09090b', '#18181b', '#27272a'] as const  // zinc-950, 900, 800
+        : ['#ffffff', '#f8fafc', '#f1f5f9'] as const; // white, slate-50, slate-100
 
     return (
         <>
@@ -46,7 +46,7 @@ export default function LandingScreen() {
                         width: 200,
                         height: 200,
                         borderRadius: 100,
-                        backgroundColor: isDark ? 'rgba(91, 159, 219, 0.08)' : 'rgba(77, 163, 255, 0.06)',
+                        backgroundColor: isDark ? 'rgba(129, 140, 248, 0.08)' : 'rgba(99, 102, 241, 0.06)',
                     }}
                 />
                 <View
@@ -57,7 +57,7 @@ export default function LandingScreen() {
                         width: 250,
                         height: 250,
                         borderRadius: 125,
-                        backgroundColor: isDark ? 'rgba(255, 52, 95, 0.05)' : 'rgba(255, 40, 84, 0.04)',
+                        backgroundColor: isDark ? 'rgba(244, 114, 182, 0.05)' : 'rgba(236, 72, 153, 0.04)',
                     }}
                 />
 
@@ -90,7 +90,7 @@ export default function LandingScreen() {
                         {/* Subtitle */}
                         <FadeInView delay={200} duration={600} slideDistance={20}>
                             <Text className='text-base text-muted-foreground'>
-                                Connect to your Raven workspace
+                                Connect to your Beam workspace
                             </Text>
                         </FadeInView>
 

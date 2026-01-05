@@ -1,43 +1,75 @@
 import { Platform } from 'react-native';
 
+/**
+ * Premium Color Palette for Beam Chat App
+ * 
+ * Design Philosophy:
+ * - Light Mode: Clean, airy, professional with subtle depth
+ * - Dark Mode: True black OLED-friendly with indigo accent
+ * - Primary: Indigo - sophisticated and professional
+ * - Accent: Pink - modern and distinctive
+ * - Greens: Success states
+ * - Reds: Destructive actions
+ */
+
 const IOS_SYSTEM_COLORS = {
     white: 'rgb(255, 255, 255)',
     black: 'rgb(0, 0, 0)',
     light: {
-        grey6: 'rgb(242, 242, 247)',
-        grey5: 'rgb(230, 230, 235)',
-        grey4: 'rgb(210, 210, 215)',
-        grey3: 'rgb(199, 199, 204)',
-        grey2: 'rgb(175, 176, 180)',
-        grey: 'rgb(142, 142, 147)',
+        // Grays - Tailwind Slate/Gray scale
+        grey6: 'rgb(248, 250, 252)',  // slate-50
+        grey5: 'rgb(241, 245, 249)',  // slate-100
+        grey4: 'rgb(226, 232, 240)',  // slate-200
+        grey3: 'rgb(203, 213, 225)',  // slate-300
+        grey2: 'rgb(148, 163, 184)',  // slate-400
+        grey: 'rgb(100, 116, 139)',   // slate-500
+
+        // Core colors
         background: 'rgb(255, 255, 255)',
-        foreground: 'rgb(0, 0, 0)',
+        foreground: 'rgb(15, 23, 42)',      // slate-900
         root: 'rgb(255, 255, 255)',
-        card: 'rgb(248, 248, 248)',
-        icon: '#1C2024',
-        greyText: 'rgb(175, 176, 180)',
-        destructive: 'rgb(255, 56, 43)',
-        primary: '#4DA3FF',
-        secondary: "#E2E8F0",
-        linkColor: '#F1F1F4'
+        card: 'rgb(248, 250, 252)',         // slate-50
+
+        // UI elements
+        icon: '#475569',                     // slate-600
+        greyText: 'rgb(100, 116, 139)',     // slate-500
+        destructive: 'rgb(239, 68, 68)',    // red-500
+        primary: '#6366F1',                  // indigo-500
+        secondary: '#F1F5F9',                // slate-100
+        linkColor: '#F8FAFC',                // slate-50
+
+        // Additional
+        accent: '#EC4899',                   // pink-500
+        success: '#22C55E',                  // green-500
+        warning: '#F59E0B',                  // amber-500
     },
     dark: {
-        grey6: 'rgb(21, 21, 24)',
-        grey5: 'rgb(30, 30, 32)',
-        grey4: 'rgb(55, 55, 57)',
-        grey3: 'rgb(70, 70, 73)',
-        grey2: 'rgb(99, 99, 102)',
-        grey: 'rgb(142, 142, 147)',
-        background: 'rgb(18, 18, 18)',
-        foreground: 'rgb(255, 255, 255)',
-        root: 'rgb(18, 18, 18)',
-        card: 'rgb(26, 26, 29)',
-        icon: '#B9BBC6',
-        greyText: 'rgb(175, 176, 180)',
-        destructive: 'rgb(254, 67, 54)',
-        primary: '#5B9FDB',
-        secondary: "#0F172A",
-        linkColor: '#1A1A1A'
+        // Grays - Tailwind Zinc scale (true blacks)
+        grey6: 'rgb(24, 24, 27)',     // zinc-900
+        grey5: 'rgb(39, 39, 42)',     // zinc-800
+        grey4: 'rgb(52, 52, 56)',     // zinc-700
+        grey3: 'rgb(63, 63, 70)',     // zinc-600
+        grey2: 'rgb(82, 82, 91)',     // zinc-500
+        grey: 'rgb(113, 113, 122)',   // zinc-500
+
+        // Core colors
+        background: 'rgb(9, 9, 11)',        // zinc-950
+        foreground: 'rgb(250, 250, 250)',   // zinc-50
+        root: 'rgb(9, 9, 11)',              // zinc-950
+        card: 'rgb(24, 24, 27)',            // zinc-900
+
+        // UI elements
+        icon: '#A1A1AA',                     // zinc-400
+        greyText: 'rgb(113, 113, 122)',     // zinc-500
+        destructive: 'rgb(248, 113, 113)',  // red-400
+        primary: '#818CF8',                  // indigo-400
+        secondary: '#27272A',                // zinc-800
+        linkColor: '#18181B',                // zinc-900
+
+        // Additional
+        accent: '#F472B6',                   // pink-400
+        success: '#4ADE80',                  // green-400
+        warning: '#FBBF24',                  // amber-400
     },
 } as const;
 
@@ -45,40 +77,46 @@ const ANDROID_COLORS = {
     white: 'rgb(255, 255, 255)',
     black: 'rgb(0, 0, 0)',
     light: {
-        grey6: 'rgb(242, 242, 247)',
-        grey5: 'rgb(230, 230, 235)',
-        grey4: 'rgb(210, 210, 215)',
-        grey3: 'rgb(199, 199, 204)',
-        grey2: 'rgb(175, 176, 180)',
-        grey: 'rgb(142, 142, 147)',
+        grey6: 'rgb(248, 250, 252)',
+        grey5: 'rgb(241, 245, 249)',
+        grey4: 'rgb(226, 232, 240)',
+        grey3: 'rgb(203, 213, 225)',
+        grey2: 'rgb(148, 163, 184)',
+        grey: 'rgb(100, 116, 139)',
         background: 'rgb(255, 255, 255)',
-        foreground: 'rgb(0, 0, 0)',
+        foreground: 'rgb(15, 23, 42)',
         root: 'rgb(255, 255, 255)',
-        card: 'rgb(248, 248, 248)',
-        icon: '#1C2024',
-        greyText: 'rgb(175, 176, 180)',
-        destructive: 'rgb(255, 56, 43)',
-        primary: '#4DA3FF',
-        secondary: "#E2E8F0",
-        linkColor: '#F1F1F4'
+        card: 'rgb(248, 250, 252)',
+        icon: '#475569',
+        greyText: 'rgb(100, 116, 139)',
+        destructive: 'rgb(239, 68, 68)',
+        primary: '#6366F1',
+        secondary: '#F1F5F9',
+        linkColor: '#F8FAFC',
+        accent: '#EC4899',
+        success: '#22C55E',
+        warning: '#F59E0B',
     },
     dark: {
-        grey6: 'rgb(21, 21, 24)',
-        grey5: 'rgb(30, 30, 32)',
-        grey4: 'rgb(55, 55, 57)',
-        grey3: 'rgb(70, 70, 73)',
-        grey2: 'rgb(99, 99, 102)',
-        grey: 'rgb(142, 142, 147)',
-        background: 'rgb(18, 18, 18)',
-        foreground: 'rgb(255, 255, 255)',
-        root: 'rgb(18, 18, 18)',
-        card: 'rgb(26, 26, 29)',
-        icon: '#B9BBC6',
-        greyText: 'rgb(175, 176, 180)',
-        destructive: 'rgb(254, 67, 54)',
-        primary: '#5B9FDB',
-        secondary: "#0F172A",
-        linkColor: '#1A1A1A'
+        grey6: 'rgb(24, 24, 27)',
+        grey5: 'rgb(39, 39, 42)',
+        grey4: 'rgb(52, 52, 56)',
+        grey3: 'rgb(63, 63, 70)',
+        grey2: 'rgb(82, 82, 91)',
+        grey: 'rgb(113, 113, 122)',
+        background: 'rgb(9, 9, 11)',
+        foreground: 'rgb(250, 250, 250)',
+        root: 'rgb(9, 9, 11)',
+        card: 'rgb(24, 24, 27)',
+        icon: '#A1A1AA',
+        greyText: 'rgb(113, 113, 122)',
+        destructive: 'rgb(248, 113, 113)',
+        primary: '#818CF8',
+        secondary: '#27272A',
+        linkColor: '#18181B',
+        accent: '#F472B6',
+        success: '#4ADE80',
+        warning: '#FBBF24',
     },
 } as const;
 

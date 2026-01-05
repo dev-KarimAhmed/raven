@@ -97,7 +97,7 @@ const AddSite = ({ useBottomSheet = false }: Props) => {
                 });
                 bottomSheetRef.current?.present();
             } else {
-                Alert.alert('Error', 'Failed to fetch site information / OAuth client not set for Raven Mobile');
+                Alert.alert('Error', 'Failed to fetch site information / OAuth client not set for Beam Mobile');
             }
         } catch (err) {
             Alert.alert('Error', 'Failed to fetch site information. Please check the URL and try again.');
@@ -318,7 +318,7 @@ export const SiteAuthFlowSheet = ({ siteInformation, onDismiss }: { siteInformat
             {/* Security note */}
             <FadeInView delay={300} duration={400} slideDistance={10}>
                 <Text className='text-xs text-center text-muted-foreground'>
-                    You'll be redirected to login securely on your Frappe site
+                    You'll be redirected to login securely on your Mjara site
                 </Text>
             </FadeInView>
         </View>

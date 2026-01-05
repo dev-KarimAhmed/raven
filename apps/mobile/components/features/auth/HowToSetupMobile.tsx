@@ -36,7 +36,7 @@ const HowToSetupMobile = () => {
                 <PulsingView minOpacity={0.5} maxOpacity={1} duration={2000}>
                     <InfoIcon height={16} width={16} fill={colors.primary} />
                 </PulsingView>
-                <Text className='text-sm text-primary'>How do I setup my site for Raven mobile?</Text>
+                <Text className='text-sm text-primary'>How do I setup my site for Beam mobile?</Text>
             </AnimatedPressableScale>
 
             <Sheet enableDynamicSizing ref={infoSheetRef}>
@@ -54,7 +54,7 @@ const HowToSetupMobileContent = ({ onDismiss }: { onDismiss: () => void }) => {
     const isDark = colorScheme === 'dark'
 
     const steps = [
-        { number: 1, text: 'Open Raven on your desktop browser' },
+        { number: 1, text: 'Open Beam on your desktop browser' },
         { number: 2, text: 'Go to', highlight: 'Settings > Mobile App' },
         { number: 3, text: 'Click on', highlight: 'Configure OAuth Client' },
     ]

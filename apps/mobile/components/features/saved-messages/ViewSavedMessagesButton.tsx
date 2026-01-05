@@ -1,8 +1,7 @@
 import { Pressable, View } from 'react-native';
 import Animated, { LayoutAnimationConfig, ZoomInRotate } from 'react-native-reanimated';
 import { cn } from '@lib/cn';
-import { COLORS } from '@theme/colors';
-import BookmarkIcon from '@assets/icons/BookmarkIcon.svg';
+import { Bookmark } from 'lucide-react-native';
 import { router } from 'expo-router';
 
 export function ViewSavedMessagesButton() {
@@ -17,10 +16,18 @@ export function ViewSavedMessagesButton() {
                     onPress={() => {
                         router.push('../home/saved-messages', { relativeToDirectory: true })
                     }}
-                    className="opacity-80">
+                    className="p-2 rounded-xl"
+                    style={({ pressed }) => ({
+                        backgroundColor: pressed ? 'rgba(255, 255, 255, 0.15)' : 'rgba(255, 255, 255, 0.08)',
+                    })}
+                >
                     {({ pressed }) => (
-                        <View className={cn('px-0.5', pressed && 'opacity-50')}>
-                            <BookmarkIcon fill={COLORS.white} width={19} height={19} />
+                        <View className={cn(pressed && 'opacity-70')}>
+                            <Bookmark
+                                size={20}
+                                color="rgba(255, 255, 255, 0.9)"
+                                strokeWidth={2}
+                            />
                         </View>
                     )}
                 </Pressable>
