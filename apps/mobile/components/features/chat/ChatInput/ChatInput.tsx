@@ -126,7 +126,7 @@ const ChatInput = ({ channelID, onSendMessage }: ChatInputProps) => {
 
     return (
         <View
-            className="flex flex-col gap-1 pt-1"
+            className="flex flex-col gap-2 pt-4 pb-6 px-5"
             style={{
                 backgroundColor: isDark ? '#09090b' : '#ffffff',
                 borderTopWidth: 1,
@@ -138,12 +138,12 @@ const ChatInput = ({ channelID, onSendMessage }: ChatInputProps) => {
             {siteID && <ReplyMessagePreview channelID={channelID} siteID={siteID} />}
             {siteID && <FileScroller channelID={channelID} siteID={siteID} />}
 
-            <View className="flex-row items-end px-3 gap-2 min-h-14 pb-2">
+            <View className="flex-row items-end gap-3">
                 <AdditionalInputs channelID={channelID} onMessageContentSend={onMessageContentSend} />
 
                 <Animated.View
-                    style={animatedInputStyle}
-                    className={`flex-1 rounded-2xl ${isDark ? 'bg-zinc-900' : 'bg-zinc-50'}`}
+                    style={[animatedInputStyle, { flex: 1 }]}
+                    className={`rounded-2xl ${isDark ? 'bg-zinc-900' : 'bg-zinc-50'}`}
                 >
                     <MentionInput
                         value={content}
@@ -169,7 +169,7 @@ const ChatInput = ({ channelID, onSendMessage }: ChatInputProps) => {
                             paddingHorizontal: 16,
                             paddingVertical: 12,
                             color: colors.foreground,
-                            maxHeight: 200,
+                            maxHeight: 150,
                             fontSize: 16,
                             lineHeight: 22,
                         }}
@@ -180,19 +180,19 @@ const ChatInput = ({ channelID, onSendMessage }: ChatInputProps) => {
                 </Animated.View>
 
                 {/* Send Button */}
-                <View className="mb-1">
+                <View className="flex-shrink-0 mb-1">
                     <ContextMenu.Root>
                         <ContextMenu.Trigger>
                             <Animated.View style={animatedSendStyle}>
                                 <Pressable
                                     disabled={loading || !hasContent}
                                     android_ripple={{ color: 'rgba(255,255,255,0.2)', borderless: true }}
-                                    className={`w-10 h-10 flex items-center justify-center rounded-full ${hasContent ? '' : 'opacity-40'
-                                        }`}
+                                    className="w-10 h-10 flex items-center justify-center rounded-full"
                                     style={{
                                         backgroundColor: hasContent
                                             ? (isDark ? '#818CF8' : '#6366F1')
                                             : (isDark ? '#27272a' : '#e4e4e7'),
+                                        opacity: hasContent ? 1 : 0.5,
                                     }}
                                     hitSlop={15}
                                     onPress={() => onSend()}

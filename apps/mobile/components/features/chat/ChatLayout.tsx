@@ -121,7 +121,7 @@ const ChatLayout = ({ channelID, isThread = false, pinnedMessagesString }: Props
                     onMomentumScrollEnd={checkIfNearBottom}
                     pinnedMessagesString={pinnedMessagesString}
                 />
-                <View className='min-h-16'>
+                <View>
                     {
                         canUserSendMessage ?
                             <ChatInput channelID={channelID} onSendMessage={onSendMessage} />
