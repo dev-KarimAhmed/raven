@@ -61,12 +61,12 @@ const AllDMsList = () => {
             <View className='flex-1'>
                 <LegendList
                     data={filteredDMs}
-                    renderItem={({ item, index }) => (
+                    renderItem={({ item, index }: { item: typeof filteredDMs[0], index: number }) => (
                         <Animated.View entering={FadeIn.delay(index * 50).duration(300)}>
                             <DMRow dm={item} />
                         </Animated.View>
                     )}
-                    keyExtractor={(item) => item.name}
+                    keyExtractor={(item: typeof filteredDMs[0]) => item.name}
                     estimatedItemSize={72}
                     ItemSeparatorComponent={() => (
                         <View

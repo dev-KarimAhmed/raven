@@ -1,14 +1,16 @@
 import { useMemo, useCallback, useContext } from 'react'
-import { View, ActivityIndicator, Text } from 'react-native'
+import { View, ActivityIndicator } from 'react-native'
 import { FrappeConfig, FrappeContext, FrappeError, useSWRInfinite } from 'frappe-react-sdk'
 import ErrorBanner from '@components/common/ErrorBanner'
 import { ThreadMessage } from './ThreadTabs'
-import ThreadsOutlineIcon from '@assets/icons/ThreadsOutlineIcon.svg'
+import { MessagesSquare } from 'lucide-react-native'
 import { useGetCurrentWorkspace } from '@hooks/useGetCurrentWorkspace'
 import useUnreadThreadsCount from '@hooks/useUnreadThreadsCount'
 import { LegendList } from '@legendapp/list'
 import { useColorScheme } from "@hooks/useColorScheme"
 import ThreadPreviewBox from './ThreadPreviewBox'
+import { Text } from '@components/nativewindui/Text'
+import Animated, { FadeIn } from 'react-native-reanimated'
 
 type Props = {
     /** Whether to fetch AI threads */
@@ -41,6 +43,8 @@ type GetThreadsSWRKey = [string, {
 const ThreadsList = ({ aiThreads, content, channel, endpoint = "raven.api.threads.get_all_threads", onlyShowUnread }: Props) => {
 
     const { workspace } = useGetCurrentWorkspace()
+    const { colorScheme } = useColorScheme()
+    const isDark = colorScheme === 'dark'
 
     const { data: unreadThreads } = useUnreadThreadsCount()
 
@@ -95,34 +99,34 @@ const ThreadsList = ({ aiThreads, content, channel, endpoint = "raven.api.thread
     }, [isReachingEnd, isLoadingMore, setSize, size])
 
     if (isLoading) {
-        return <View className="flex-1 justify-center items-center h-full">
-            <ActivityIndicator />
-        </View>
+        return (
+            <View className="flex-1 justify-center items-center h-64">
+                <ActivityIndicator size="large" color={isDark ? '#818CF8' : '#6366F1'} />
+            </View>
+        )
     }
 
     if (error) {
-        return (
-            <ErrorBanner error={error} />
-        )
+        return <ErrorBanner error={error} />
     }
 
     return (
         <LegendList
             data={threads ?? []}
-            keyExtractor={(item) => item.name}
-            renderItem={({ item }) => (
-                <View role='listitem'>
+            keyExtractor={(item: ThreadMessage) => item.name}
+            renderItem={({ item, index }: { item: ThreadMessage, index: number }) => (
+                <Animated.View entering={FadeIn.delay(index * 30).duration(300)}>
                     <ThreadPreviewBox
                         thread={item}
                         unreadCount={unreadThreadsMap?.[item.name] ?? 0}
                     />
-                </View>
+                </Animated.View>
             )}
             onEndReached={loadMore}
             onEndReachedThreshold={0.1}
             ListFooterComponent={
-                <View className='flex flex-row justify-center items-center'>
-                    {isLoadingMore && <ActivityIndicator />}
+                <View className='flex flex-row justify-center items-center py-4'>
+                    {isLoadingMore && <ActivityIndicator color={isDark ? '#818CF8' : '#6366F1'} />}
                 </View>
             }
             contentContainerStyle={{
@@ -137,6 +141,8 @@ const ThreadsList = ({ aiThreads, content, channel, endpoint = "raven.api.thread
 }
 
 const EmptyStateForThreads = ({ isFiltered = false, searchText }: { isFiltered?: boolean, searchText?: string }) => {
+    const { colorScheme } = useColorScheme()
+    const isDark = colorScheme === 'dark'
 
     const content = useMemo(() => {
         if (searchText && !isFiltered) {
@@ -152,24 +158,29 @@ const EmptyStateForThreads = ({ isFiltered = false, searchText }: { isFiltered?:
         } else {
             return {
                 title: 'No threads yet',
-                description: 'Threads help keep conversations organized. Reply to any message to start a new thread or use the thread icon on messages to join existing discussions.'
+                description: 'Reply to any message to start a new thread or use the thread icon on messages to join existing discussions.'
             }
         }
     }, [isFiltered, searchText])
 
-    const { colors } = useColorScheme()
-
     return (
-        <View className="flex flex-col gap-2 bg-background p-4">
-            <View className="flex flex-row items-center gap-2">
-                <ThreadsOutlineIcon fill={colors.icon} height={20} width={20} />
-                <Text className="text-foreground text-base font-medium">
+        <View className="flex flex-col gap-4 px-6 py-12 items-center">
+            <View
+                className="p-4 rounded-2xl"
+                style={{
+                    backgroundColor: isDark ? 'rgba(129, 140, 248, 0.1)' : 'rgba(99, 102, 241, 0.08)',
+                }}
+            >
+                <MessagesSquare size={40} color={isDark ? '#818CF8' : '#6366F1'} strokeWidth={1.5} />
+            </View>
+            <View className="items-center gap-2">
+                <Text className="text-lg font-semibold text-foreground text-center">
                     {content.title}
                 </Text>
+                <Text className="text-sm text-muted-foreground text-center max-w-72">
+                    {content.description}
+                </Text>
             </View>
-            <Text className="text-sm text-foreground/60">
-                {content.description}
-            </Text>
         </View>
     )
 }
