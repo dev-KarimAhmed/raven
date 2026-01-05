@@ -1,5 +1,5 @@
 import { Stack } from 'expo-router';
-import { Platform, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { Text } from '@components/nativewindui/Text';
 import LogOutButton from '@components/features/profile/profile-settings/LogOutButton';
 import NotificationSetting from '@components/features/profile/profile-settings/NotificationSetting';
@@ -14,7 +14,8 @@ import SwitchSitesSetting from '@components/features/profile/profile-settings/Sw
 import CommonErrorBoundary from '@components/common/CommonErrorBoundary';
 import { useColorScheme } from '@hooks/useColorScheme';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { User, Settings, Palette, Bell, LogOut } from 'lucide-react-native';
+import { User, Settings } from 'lucide-react-native';
+import ScreenHeader from '@components/common/ScreenHeader';
 
 export default function Profile() {
     const { colors, colorScheme } = useColorScheme();
@@ -28,28 +29,14 @@ export default function Profile() {
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: 120 }}
             >
-                {/* Profile Header */}
-                <Animated.View
-                    entering={FadeInDown.duration(400)}
-                    className="px-5 pt-4 pb-2"
-                >
-                    <View className="flex-row items-center gap-3">
-                        <View
-                            className="p-2 rounded-xl"
-                            style={{
-                                backgroundColor: isDark ? 'rgba(129, 140, 248, 0.15)' : 'rgba(99, 102, 241, 0.1)',
-                            }}
-                        >
-                            <User size={24} color={isDark ? '#818CF8' : '#6366F1'} strokeWidth={2} />
-                        </View>
-                        <View>
-                            <Text className="text-2xl font-bold text-foreground">Profile</Text>
-                            <Text className="text-sm text-muted-foreground">Manage your account</Text>
-                        </View>
-                    </View>
-                </Animated.View>
+                {/* Header */}
+                <ScreenHeader
+                    title="Profile"
+                    subtitle="Manage your account"
+                    icon={User}
+                />
 
-                <View className='flex flex-col gap-6 px-4 pt-4'>
+                <View className='flex flex-col gap-6 px-4 pt-2'>
                     {/* Profile Picture Card */}
                     <Animated.View entering={FadeInDown.delay(100).duration(400)}>
                         <ProfilePicture />
