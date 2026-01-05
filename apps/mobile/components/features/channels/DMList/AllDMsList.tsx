@@ -4,18 +4,20 @@ import { ChannelListContext, ChannelListContextType } from "@raven/lib/providers
 import { useContext, useMemo, useState } from "react"
 import { View, ActivityIndicator } from "react-native"
 import DMRow from "./DMRow"
-import ChatOutlineIcon from "@assets/icons/ChatOutlineIcon.svg"
+import { MessageCircle } from "lucide-react-native"
 import ErrorBanner from "@components/common/ErrorBanner"
-import { Divider } from "@components/layout/Divider"
 import SearchInput from "@components/common/SearchInput/SearchInput"
 import { useDebounce } from "@raven/lib/hooks/useDebounce"
 import { Text } from "@components/nativewindui/Text"
 import { LegendList } from "@legendapp/list"
+import Animated, { FadeIn } from 'react-native-reanimated'
 
 const AllDMsList = () => {
 
     const { dm_channels, error, isLoading } = useContext(ChannelListContext) as ChannelListContextType
     const { unread_count } = useUnreadMessageCount()
+    const { colors, colorScheme } = useColorScheme()
+    const isDark = colorScheme === 'dark'
 
     const allDMs = useMemo(() => {
         return dm_channels?.map(dm => ({
@@ -34,57 +36,78 @@ const AllDMsList = () => {
     }, [allDMs, debouncedSearchQuery])
 
     if (isLoading) {
-        return <View className="flex-1 justify-center items-center h-full">
-            <ActivityIndicator />
-        </View>
-    }
-
-    if (error) {
         return (
-            <ErrorBanner error={error} />
+            <View className="flex-1 justify-center items-center h-64">
+                <ActivityIndicator size="large" color={isDark ? '#818CF8' : '#6366F1'} />
+            </View>
         )
     }
 
+    if (error) {
+        return <ErrorBanner error={error} />
+    }
+
     return (
-        <View className="flex flex-col">
-            <View className="px-3 pt-3 pb-1.5">
+        <View className="flex flex-col flex-1">
+            {/* Search */}
+            <View className="px-4 py-3">
                 <SearchInput
                     onChangeText={setSearchQuery}
                     value={searchQuery}
                 />
             </View>
+
+            {/* DM List */}
             <View className='flex-1'>
                 <LegendList
                     data={filteredDMs}
-                    renderItem={({ item }) => {
-                        return <DMRow dm={item} />
-                    }}
+                    renderItem={({ item, index }) => (
+                        <Animated.View entering={FadeIn.delay(index * 50).duration(300)}>
+                            <DMRow dm={item} />
+                        </Animated.View>
+                    )}
                     keyExtractor={(item) => item.name}
-                    estimatedItemSize={68}
-                    ItemSeparatorComponent={() => <Divider />}
+                    estimatedItemSize={72}
+                    ItemSeparatorComponent={() => (
+                        <View
+                            className="h-px mx-4"
+                            style={{ backgroundColor: isDark ? 'rgba(39, 39, 42, 0.6)' : 'rgba(229, 231, 235, 0.8)' }}
+                        />
+                    )}
                     bounces={false}
                     showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{ paddingBottom: 100 }}
                     ListEmptyComponent={<DMListEmptyState searchQuery={searchQuery} />}
                 />
-                <Divider prominent />
             </View>
         </View>
     )
 }
 
 const DMListEmptyState = ({ searchQuery }: { searchQuery?: string }) => {
-    const { colors } = useColorScheme()
+    const { colorScheme } = useColorScheme()
+    const isDark = colorScheme === 'dark'
+
     return (
-        <View className="flex flex-col gap-2 bg-background px-4 py-1">
-            <View className="flex flex-row items-center gap-2">
-                <ChatOutlineIcon fill={colors.icon} height={20} width={20} />
-                <Text className="text-foreground text-base font-medium">
-                    {searchQuery ? `No DMs found with "${searchQuery}"` : 'No DMs found'}
+        <View className="flex flex-col gap-4 px-6 py-12 items-center">
+            <View
+                className="p-4 rounded-2xl"
+                style={{
+                    backgroundColor: isDark ? 'rgba(129, 140, 248, 0.1)' : 'rgba(99, 102, 241, 0.08)',
+                }}
+            >
+                <MessageCircle size={40} color={isDark ? '#818CF8' : '#6366F1'} strokeWidth={1.5} />
+            </View>
+            <View className="items-center gap-2">
+                <Text className="text-lg font-semibold text-foreground text-center">
+                    {searchQuery ? `No conversations found` : 'No messages yet'}
+                </Text>
+                <Text className="text-sm text-muted-foreground text-center max-w-64">
+                    {searchQuery
+                        ? `We couldn't find anyone matching "${searchQuery}"`
+                        : `Start a conversation with someone to see it here`}
                 </Text>
             </View>
-            <Text className="text-sm text-foreground/60">
-                {searchQuery ? 'Try searching for a different user name, or invite this userto Raven' : `Start a new conversation with someone to see it here`}
-            </Text>
         </View>
     )
 }

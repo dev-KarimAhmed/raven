@@ -1,6 +1,6 @@
 import { Keyboard, Pressable, ScrollView, View } from "react-native"
 import AdditionalInputs from "./AdditionalInputs"
-import SendIcon from "@assets/icons/SendIcon.svg"
+import { Send } from "lucide-react-native"
 import { useColorScheme } from "@hooks/useColorScheme"
 import SendItem from "./SendItem"
 import { useAtom, useSetAtom } from 'jotai'
@@ -16,7 +16,14 @@ import { UserMentions } from "./mentions"
 import ReplyMessagePreview from "./ReplyMessagePreview"
 import AIEventIndicator from "./AIEventIndicator"
 import { useTyping } from "@raven/lib/hooks/useTypingIndicator"
-import * as ContextMenu from 'zeego/context-menu';
+import * as ContextMenu from 'zeego/context-menu'
+import Animated, {
+    useSharedValue,
+    useAnimatedStyle,
+    withSpring,
+    withTiming,
+    interpolateColor
+} from 'react-native-reanimated'
 
 interface ChatInputProps {
     channelID: string
@@ -26,8 +33,8 @@ interface ChatInputProps {
 const ChatInput = ({ channelID, onSendMessage }: ChatInputProps) => {
 
     const { onUserType, stopTyping } = useTyping(channelID)
-
     const [content, setContent] = useState('')
+    const [isFocused, setIsFocused] = useState(false)
 
     const siteInfo = useSiteContext()
     const siteID = siteInfo?.sitename ?? ''
@@ -41,21 +48,50 @@ const ChatInput = ({ channelID, onSendMessage }: ChatInputProps) => {
         setSelectedMessage(null)
     }, [onSendMessage, setSelectedMessage, stopTyping])
 
-
     const { sendMessage, loading } = useSendMessage(siteID, channelID as string, cleanupAfterSendingMessage)
 
-    const { colors } = useColorScheme()
+    const { colors, colorScheme } = useColorScheme()
+    const isDark = colorScheme === 'dark'
+
+    // Animation values
+    const inputScale = useSharedValue(1)
+    const sendButtonScale = useSharedValue(1)
+    const focusAnim = useSharedValue(0)
+
+    const animatedInputStyle = useAnimatedStyle(() => {
+        const borderColor = interpolateColor(
+            focusAnim.value,
+            [0, 1],
+            [isDark ? '#27272a' : '#e4e4e7', isDark ? '#818CF8' : '#6366F1']
+        )
+        return {
+            borderColor,
+            borderWidth: 1.5,
+            transform: [{ scale: inputScale.value }],
+        }
+    })
+
+    const animatedSendStyle = useAnimatedStyle(() => ({
+        transform: [{ scale: sendButtonScale.value }],
+    }))
+
+    const handleFocus = () => {
+        setIsFocused(true)
+        focusAnim.value = withTiming(1, { duration: 200 })
+    }
+
+    const handleBlur = () => {
+        setIsFocused(false)
+        focusAnim.value = withTiming(0, { duration: 200 })
+    }
 
     const onSend = (sendSilently: boolean = false) => {
-        /* Parse the cotent to detect mentions and links.
-        For example, when typing "Hey @Mary check this out www.frappe.io"
-        The output of the component will be:
-        Hey @[Mary](2) check this out www.frappe.io
+        // Animate send button
+        sendButtonScale.value = withSpring(0.8, { damping: 10 })
+        setTimeout(() => {
+            sendButtonScale.value = withSpring(1, { damping: 8 })
+        }, 100)
 
-        We need to detect the mentions and links and replace them with HTML tags before sending the message.
-        */
-
-        // Find the mentions in the content and replace them with HTML tags
         const replacedValue = replaceMentionValues(content, (mention) => {
             if (mention.trigger === '@') {
                 return `<span data-type="userMention" class="mention" data-id="${mention.id}" data-label="${mention.name}">@${mention.name}</span>`
@@ -68,9 +104,7 @@ const ChatInput = ({ channelID, onSendMessage }: ChatInputProps) => {
             return mention.original
         })
 
-        // We can allow HTML tags since this is only on the client side. XSS Protection is handled by Frappe on the server side.
         const md = markdownit({ breaks: true, linkify: true, html: true })
-
         let html = md.render(replacedValue)
 
         sendMessage(html, false, sendSilently)
@@ -79,8 +113,6 @@ const ChatInput = ({ channelID, onSendMessage }: ChatInputProps) => {
             })
     }
 
-
-    // This is used by the GIF Picker and additional inputs (doctype link sending etc)
     const onMessageContentSend = (content: string) => {
         sendMessage(content, true)
     }
@@ -90,94 +122,123 @@ const ChatInput = ({ channelID, onSendMessage }: ChatInputProps) => {
         setContent(text)
     }, [onUserType])
 
-    return <View className="flex flex-col gap-1 pt-1 bg-background">
-        <AIEventIndicator channelID={channelID} />
-        <TypingIndicator channel={channelID} />
-        {siteID && <ReplyMessagePreview channelID={channelID} siteID={siteID} />}
-        {siteID && <FileScroller channelID={channelID} siteID={siteID} />}
+    const hasContent = content.trim().length > 0
 
-        <View className={`flex-row items-end px-4 gap-2 
-            min-h-16 justify-between`}>
-            <AdditionalInputs channelID={channelID} onMessageContentSend={onMessageContentSend} />
-            <View className="flex-1  border border-border rounded-lg">
+    return (
+        <View
+            className="flex flex-col gap-1 pt-1"
+            style={{
+                backgroundColor: isDark ? '#09090b' : '#ffffff',
+                borderTopWidth: 1,
+                borderTopColor: isDark ? 'rgba(39, 39, 42, 0.6)' : 'rgba(229, 231, 235, 0.8)',
+            }}
+        >
+            <AIEventIndicator channelID={channelID} />
+            <TypingIndicator channel={channelID} />
+            {siteID && <ReplyMessagePreview channelID={channelID} siteID={siteID} />}
+            {siteID && <FileScroller channelID={channelID} siteID={siteID} />}
 
-                <MentionInput
-                    value={content}
-                    multiline
-                    placeholderTextColor={colors.grey}
-                    placeholder="Type a message..."
-                    onChange={onContentChange}
-                    partTypes={[
-                        {
-                            isBottomMentionSuggestionsRender: false,
-                            trigger: '@', // Should be a single character like '@' or '#'
-                            renderSuggestions: (props) => <UserMentions {...props} channelID={channelID} />,
-                            textStyle: { fontWeight: 'medium', color: colors.primary }, // The mention style in the input
-                        },
-                        {
-                            pattern: /(https?:\/\/|www\.)[-a-zA-Z0-9@:%._\+~#=]{1,256}\.(xn--)?[a-z0-9-]{2,20}\b([-a-zA-Z0-9@:%_\+\[\],.~#?&\/=]*[-a-zA-Z0-9@:%_\+\]~#?&\/=])*/gi,
-                            textStyle: { color: colors.primary, fontSize: 16 },
-                        },
-                    ]}
-                    style={{
-                        padding: 12,
-                        color: colors.foreground,
-                        maxHeight: 250,
-                        fontSize: 16,
-                    }}
-                    containerStyle={{
-                        position: 'static'
-                    }}
-                    className="text-base"
-                />
+            <View className="flex-row items-end px-3 gap-2 min-h-14 pb-2">
+                <AdditionalInputs channelID={channelID} onMessageContentSend={onMessageContentSend} />
 
-            </View>
-            <View className="mb-2">
-                <ContextMenu.Root>
-                    <ContextMenu.Trigger>
-                        <Pressable
-                            disabled={loading}
-                            // Add a subtle ripple effect on Android
-                            android_ripple={{ color: 'rgba(0,0,0,0.1)', borderless: false }}
-                            className="w-8 h-8 flex items-center justify-center rounded-full"
-                            hitSlop={15}
-                            onPress={() => onSend()}
-                            onLongPress={() => { }}>
-                            <SendIcon fill={colors.primary} />
-                        </Pressable>
-                    </ContextMenu.Trigger>
-                    <ContextMenu.Content>
-                        <ContextMenu.Item key="star" onSelect={() => onSend(true)}>
-                            <ContextMenu.ItemTitle>Send without notification</ContextMenu.ItemTitle>
-                            <ContextMenu.ItemIcon
-                                ios={{
-                                    name: 'bell.slash',
-                                    pointSize: 14,
-                                    weight: 'semibold',
-                                    scale: 'medium',
-                                    // can also be a color string. Requires iOS 15+
-                                    hierarchicalColor: {
-                                        dark: colors.icon,
-                                        light: colors.icon,
-                                    },
-                                    // alternative to hierarchical color. Requires iOS 15+
-                                    paletteColors: [
-                                        {
+                <Animated.View
+                    style={animatedInputStyle}
+                    className={`flex-1 rounded-2xl ${isDark ? 'bg-zinc-900' : 'bg-zinc-50'}`}
+                >
+                    <MentionInput
+                        value={content}
+                        multiline
+                        placeholderTextColor={isDark ? '#71717a' : '#a1a1aa'}
+                        placeholder="Type a message..."
+                        onChange={onContentChange}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                        partTypes={[
+                            {
+                                isBottomMentionSuggestionsRender: false,
+                                trigger: '@',
+                                renderSuggestions: (props) => <UserMentions {...props} channelID={channelID} />,
+                                textStyle: { fontWeight: '600', color: isDark ? '#818CF8' : '#6366F1' },
+                            },
+                            {
+                                pattern: /(https?:\/\/|www\.)[-a-zA-Z0-9@:%._\+~#=]{1,256}\.(xn--)?[a-z0-9-]{2,20}\b([-a-zA-Z0-9@:%_\+\[\],.~#?&\/=]*[-a-zA-Z0-9@:%_\+\]~#?&\/=])*/gi,
+                                textStyle: { color: isDark ? '#818CF8' : '#6366F1', fontSize: 16 },
+                            },
+                        ]}
+                        style={{
+                            paddingHorizontal: 16,
+                            paddingVertical: 12,
+                            color: colors.foreground,
+                            maxHeight: 200,
+                            fontSize: 16,
+                            lineHeight: 22,
+                        }}
+                        containerStyle={{
+                            position: 'static'
+                        }}
+                    />
+                </Animated.View>
+
+                {/* Send Button */}
+                <View className="mb-1">
+                    <ContextMenu.Root>
+                        <ContextMenu.Trigger>
+                            <Animated.View style={animatedSendStyle}>
+                                <Pressable
+                                    disabled={loading || !hasContent}
+                                    android_ripple={{ color: 'rgba(255,255,255,0.2)', borderless: true }}
+                                    className={`w-10 h-10 flex items-center justify-center rounded-full ${hasContent ? '' : 'opacity-40'
+                                        }`}
+                                    style={{
+                                        backgroundColor: hasContent
+                                            ? (isDark ? '#818CF8' : '#6366F1')
+                                            : (isDark ? '#27272a' : '#e4e4e7'),
+                                    }}
+                                    hitSlop={15}
+                                    onPress={() => onSend()}
+                                    onLongPress={() => { }}
+                                >
+                                    <Send
+                                        size={18}
+                                        color={hasContent ? '#ffffff' : (isDark ? '#71717a' : '#a1a1aa')}
+                                        strokeWidth={2.5}
+                                    />
+                                </Pressable>
+                            </Animated.View>
+                        </ContextMenu.Trigger>
+                        <ContextMenu.Content>
+                            <ContextMenu.Item key="silent" onSelect={() => onSend(true)}>
+                                <ContextMenu.ItemTitle>Send without notification</ContextMenu.ItemTitle>
+                                <ContextMenu.ItemIcon
+                                    ios={{
+                                        name: 'bell.slash',
+                                        pointSize: 14,
+                                        weight: 'semibold',
+                                        scale: 'medium',
+                                        hierarchicalColor: {
                                             dark: colors.icon,
                                             light: colors.icon,
                                         },
-                                    ],
-                                }}
-                            />
-                        </ContextMenu.Item>
-                    </ContextMenu.Content>
-                </ContextMenu.Root>
+                                        paletteColors: [
+                                            {
+                                                dark: colors.icon,
+                                                light: colors.icon,
+                                            },
+                                        ],
+                                    }}
+                                />
+                            </ContextMenu.Item>
+                        </ContextMenu.Content>
+                    </ContextMenu.Root>
+                </View>
             </View>
         </View>
-    </View>
+    )
 }
 
 const FileScroller = ({ channelID, siteID }: { channelID: string, siteID: string }) => {
+    const { colorScheme } = useColorScheme()
+    const isDark = colorScheme === 'dark'
 
     const [files, setFiles] = useAtom(filesAtomFamily(siteID + channelID))
 
@@ -187,10 +248,18 @@ const FileScroller = ({ channelID, siteID }: { channelID: string, siteID: string
         })
     }
 
-    return <View>
-        {files.length > 0 && <View className="px-2 pt-2 border-t border-border">
+    if (files.length === 0) return null
+
+    return (
+        <View
+            className="px-3 pt-2"
+            style={{
+                borderTopWidth: 1,
+                borderTopColor: isDark ? 'rgba(39, 39, 42, 0.6)' : 'rgba(229, 231, 235, 0.8)',
+            }}
+        >
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                <View className="flex-row gap-4 justify-start items-start py-2 pr-2">
+                <View className="flex-row gap-3 justify-start items-start py-2 pr-2">
                     {files.map((file: CustomFile) => (
                         <SendItem
                             key={file.fileID}
@@ -202,9 +271,7 @@ const FileScroller = ({ channelID, siteID }: { channelID: string, siteID: string
                 </View>
             </ScrollView>
         </View>
-        }
-    </View>
+    )
 }
-
 
 export default ChatInput

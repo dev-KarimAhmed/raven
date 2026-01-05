@@ -12,8 +12,8 @@ import dayjs from "dayjs"
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
-import relativeTime from 'dayjs/plugin/relativeTime';
-import UnreadCountBadge from "@components/common/Badge/UnreadCountBadge"
+import relativeTime from 'dayjs/plugin/relativeTime'
+import { ChevronRight } from 'lucide-react-native'
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -26,7 +26,8 @@ const DMRow = ({ dm }: { dm: DMChannelWithUnreadCount }) => {
     const user = useGetUser(dm.peer_user_id)
     const isActive = useIsUserActive(dm.peer_user_id)
 
-    const { colors } = useColorScheme()
+    const { colorScheme } = useColorScheme()
+    const isDark = colorScheme === 'dark'
 
     const { lastMessageContent, isSentByUser } = useMemo(() => {
         let isSentByUser = false
@@ -48,57 +49,97 @@ const DMRow = ({ dm }: { dm: DMChannelWithUnreadCount }) => {
     return (
         <Link href={`../chat/${dm.name}`} asChild>
             <Pressable
-                className='flex flex-row relative items-center gap-3 py-3 px-4 ios:active:bg-linkColor'
-                android_ripple={{ color: 'rgba(0,0,0,0.1)', borderless: false }}>
-                {({ pressed, hovered }) => <>
+                className='flex flex-row relative items-center gap-3 py-3.5 px-4'
+                style={({ pressed }) => ({
+                    backgroundColor: pressed
+                        ? (isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.03)')
+                        : 'transparent',
+                })}
+                android_ripple={{ color: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)', borderless: false }}
+            >
+                {/* Unread indicator */}
+                {isUnread && (
                     <View
                         style={{
-                            width: 7,
-                            height: 7,
+                            width: 8,
+                            height: 8,
                             position: 'absolute',
-                            left: 6,
-                            top: 28,
-                            borderRadius: '100%',
-                            backgroundColor: isUnread ? colors.primary : 'transparent',
+                            left: 8,
+                            top: '50%',
+                            marginTop: -4,
+                            borderRadius: 4,
+                            backgroundColor: isDark ? '#818CF8' : '#6366F1',
                         }}
                     />
-                    <UserAvatar
-                        src={user?.user_image}
-                        alt={user?.full_name ?? user?.name ?? dm.peer_user_id}
-                        isActive={isActive}
-                        isBot={user?.type === 'Bot'}
-                        availabilityStatus={user?.availability_status}
-                        avatarProps={{ className: 'h-10 w-10' }}
-                    />
-                    <View className='flex-1 flex-col overflow-hidden'>
-                        <View className='flex flex-row justify-between items-center'>
-                            <Text
-                                className={'text-base font-medium text-foreground'}>
-                                {user?.full_name ?? dm.peer_user_id} {myProfile?.name === dm.peer_user_id && '(You)'}
-                            </Text>
-                            {dm.last_message_timestamp ? (
-                                <LastMessageTimestamp
-                                    timestamp={dm.last_message_timestamp}
-                                    isUnread={isUnread}
-                                />
-                            ) : null}
-                        </View>
-                        <View className='flex flex-row items-center gap-1 justify-between'>
-                            <View
-                                style={{ maxHeight: 30, maxWidth: dm.unread_count > 0 ? '90%' : '100%', }}
-                                className='flex flex-row items-center gap-1'>
-                                {isSentByUser ? <Text className='text-sm text-muted-foreground' style={{ fontWeight: isUnread ? '500' : '400' }}>You:</Text> : null}
-                                <Text className='text-sm text-muted-foreground line-clamp-1'
-                                    style={{ fontWeight: isUnread ? '500' : '400' }}>{lastMessageContent}</Text>
-                            </View>
-                            {dm.unread_count && dm.unread_count > 0 ? <UnreadCountBadge count={dm.unread_count} prominent /> : null}
-                        </View>
+                )}
+
+                {/* Avatar */}
+                <UserAvatar
+                    src={user?.user_image}
+                    alt={user?.full_name ?? user?.name ?? dm.peer_user_id}
+                    isActive={isActive}
+                    isBot={user?.type === 'Bot'}
+                    availabilityStatus={user?.availability_status}
+                    avatarProps={{ className: 'h-12 w-12' }}
+                />
+
+                {/* Content */}
+                <View className='flex-1 flex-col gap-0.5'>
+                    <View className='flex flex-row justify-between items-center'>
+                        <Text
+                            className={`text-base text-foreground ${isUnread ? 'font-semibold' : 'font-medium'}`}
+                        >
+                            {user?.full_name ?? dm.peer_user_id}
+                            {myProfile?.name === dm.peer_user_id && (
+                                <Text className="text-muted-foreground font-normal"> (You)</Text>
+                            )}
+                        </Text>
+                        {dm.last_message_timestamp && (
+                            <LastMessageTimestamp
+                                timestamp={dm.last_message_timestamp}
+                                isUnread={isUnread}
+                            />
+                        )}
                     </View>
-                </>}
+                    <View className='flex flex-row items-center gap-1 justify-between'>
+                        <View
+                            style={{ maxHeight: 24, maxWidth: dm.unread_count > 0 ? '85%' : '95%' }}
+                            className='flex flex-row items-center gap-1'
+                        >
+                            {isSentByUser && (
+                                <Text
+                                    className='text-sm text-muted-foreground'
+                                    style={{ fontWeight: isUnread ? '500' : '400' }}
+                                >
+                                    You:
+                                </Text>
+                            )}
+                            <Text
+                                className={`text-sm line-clamp-1 ${isUnread ? 'text-foreground/80' : 'text-muted-foreground'}`}
+                                style={{ fontWeight: isUnread ? '500' : '400' }}
+                            >
+                                {lastMessageContent || 'No messages yet'}
+                            </Text>
+                        </View>
+
+                        {/* Unread badge or chevron */}
+                        {isUnread ? (
+                            <View
+                                className="min-w-5 h-5 rounded-full items-center justify-center px-1.5"
+                                style={{ backgroundColor: isDark ? '#818CF8' : '#6366F1' }}
+                            >
+                                <Text className="text-white text-xs font-bold">
+                                    {dm.unread_count > 99 ? '99+' : dm.unread_count}
+                                </Text>
+                            </View>
+                        ) : (
+                            <ChevronRight size={16} color={isDark ? '#52525b' : '#d4d4d8'} />
+                        )}
+                    </View>
+                </View>
             </Pressable>
         </Link>
     )
-
 }
 
 interface LastMessageTimestampProps {
@@ -106,9 +147,11 @@ interface LastMessageTimestampProps {
     isUnread?: boolean
 }
 
-const LastMessageTimestamp = ({ timestamp }: LastMessageTimestampProps) => {
-    const displayTimestamp = useMemo(() => {
+const LastMessageTimestamp = ({ timestamp, isUnread }: LastMessageTimestampProps) => {
+    const { colorScheme } = useColorScheme()
+    const isDark = colorScheme === 'dark'
 
+    const displayTimestamp = useMemo(() => {
         if (!timestamp) {
             return ''
         }
@@ -123,7 +166,6 @@ const LastMessageTimestamp = ({ timestamp }: LastMessageTimestampProps) => {
         const yesterday = today.subtract(1, 'day')
 
         if (dateObj.isSame(today, 'day')) {
-            // If the difference is less than 1 minute, show "Just now"
             if (Math.abs(dateObj.diff(today, 'minute')) < 1) {
                 return 'just now'
             }
@@ -149,7 +191,10 @@ const LastMessageTimestamp = ({ timestamp }: LastMessageTimestampProps) => {
     }, [timestamp])
 
     return (
-        <Text className='text-xs text-muted-foreground'>
+        <Text
+            className={`text-xs ${isUnread ? 'font-medium' : 'font-normal'}`}
+            style={{ color: isUnread ? (isDark ? '#818CF8' : '#6366F1') : (isDark ? '#71717a' : '#a1a1aa') }}
+        >
             {displayTimestamp}
         </Text>
     )
