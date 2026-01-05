@@ -22,7 +22,6 @@
   "license": "AGPL-3.0-only",
   "devDependencies": {
     "@react-native-community/cli": "^20.0.2",
-    "expo": "^54.0.30",
     "turbo": "^2.3.3"
   }
 }
