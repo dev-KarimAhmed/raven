@@ -38,7 +38,7 @@ const AllDMsList = () => {
     if (isLoading) {
         return (
             <View className="flex-1 justify-center items-center h-64">
-                <ActivityIndicator size="large" color={isDark ? '#818CF8' : '#6366F1'} />
+                <ActivityIndicator size="large" color={isDark ? '#59168B' : '#3C0366'} />
             </View>
         )
     }
@@ -96,7 +96,7 @@ const DMListEmptyState = ({ searchQuery }: { searchQuery?: string }) => {
                     backgroundColor: isDark ? 'rgba(129, 140, 248, 0.1)' : 'rgba(99, 102, 241, 0.08)',
                 }}
             >
-                <MessageCircle size={40} color={isDark ? '#818CF8' : '#6366F1'} strokeWidth={1.5} />
+                <MessageCircle size={40} color={isDark ? '#59168B' : '#3C0366'} strokeWidth={1.5} />
             </View>
             <View className="items-center gap-2">
                 <Text className="text-lg font-semibold text-foreground text-center">

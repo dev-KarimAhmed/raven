@@ -96,7 +96,7 @@ const ThreadPreviewBox = ({ thread, unreadCount }: { thread: ThreadMessage, unre
                         {isUnread ? (
                             <View
                                 className="min-w-5 h-5 rounded-full items-center justify-center px-1.5"
-                                style={{ backgroundColor: isDark ? '#818CF8' : '#6366F1' }}
+                                style={{ backgroundColor: isDark ? '#59168B' : '#3C0366' }}
                             >
                                 <Text className="text-white text-xs font-bold">
                                     {unreadCount > 99 ? '99+' : unreadCount}
@@ -120,10 +120,10 @@ const ThreadPreviewBox = ({ thread, unreadCount }: { thread: ThreadMessage, unre
                                 backgroundColor: isDark ? 'rgba(129, 140, 248, 0.1)' : 'rgba(99, 102, 241, 0.08)',
                             }}
                         >
-                            <MessageSquare size={12} color={isDark ? '#818CF8' : '#6366F1'} strokeWidth={2.5} />
+                            <MessageSquare size={12} color={isDark ? '#59168B' : '#3C0366'} strokeWidth={2.5} />
                             <Text
                                 className='text-xs font-semibold'
-                                style={{ color: isDark ? '#818CF8' : '#6366F1' }}
+                                style={{ color: isDark ? '#59168B' : '#3C0366' }}
                             >
                                 {thread.reply_count ?? 0} {thread.reply_count === 1 ? 'Reply' : 'Replies'}
                             </Text>

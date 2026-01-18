@@ -5,9 +5,9 @@ import { Platform } from 'react-native';
  * 
  * Design Philosophy:
  * - Light Mode: Clean, airy, professional with subtle depth
- * - Dark Mode: True black OLED-friendly with indigo accent
- * - Primary: Indigo - sophisticated and professional
- * - Accent: Pink - modern and distinctive
+ * - Dark Mode: True black OLED-friendly with purple accent
+ * - Primary: Purple - sophisticated and distinctive
+ * - Accent: Cyan/Teal - modern complement to purple
  * - Greens: Success states
  * - Reds: Destructive actions
  */
@@ -34,12 +34,12 @@ const IOS_SYSTEM_COLORS = {
         icon: '#475569',                     // slate-600
         greyText: 'rgb(100, 116, 139)',     // slate-500
         destructive: 'rgb(239, 68, 68)',    // red-500
-        primary: '#6366F1',                  // indigo-500
+        primary: '#3C0366',                  // beam purple (dark)
         secondary: '#F1F5F9',                // slate-100
         linkColor: '#F8FAFC',                // slate-50
 
         // Additional
-        accent: '#EC4899',                   // pink-500
+        accent: '#00D4FF',                   // cyan accent
         success: '#22C55E',                  // green-500
         warning: '#F59E0B',                  // amber-500
     },
@@ -62,12 +62,12 @@ const IOS_SYSTEM_COLORS = {
         icon: '#A1A1AA',                     // zinc-400
         greyText: 'rgb(113, 113, 122)',     // zinc-500
         destructive: 'rgb(248, 113, 113)',  // red-400
-        primary: '#818CF8',                  // indigo-400
+        primary: '#59168B',                  // beam purple (light)
         secondary: '#27272A',                // zinc-800
         linkColor: '#18181B',                // zinc-900
 
         // Additional
-        accent: '#F472B6',                   // pink-400
+        accent: '#00D4FF',                   // cyan accent
         success: '#4ADE80',                  // green-400
         warning: '#FBBF24',                  // amber-400
     },
@@ -90,10 +90,10 @@ const ANDROID_COLORS = {
         icon: '#475569',
         greyText: 'rgb(100, 116, 139)',
         destructive: 'rgb(239, 68, 68)',
-        primary: '#6366F1',
+        primary: '#3C0366',
         secondary: '#F1F5F9',
         linkColor: '#F8FAFC',
-        accent: '#EC4899',
+        accent: '#00D4FF',
         success: '#22C55E',
         warning: '#F59E0B',
     },
@@ -111,10 +111,10 @@ const ANDROID_COLORS = {
         icon: '#A1A1AA',
         greyText: 'rgb(113, 113, 122)',
         destructive: 'rgb(248, 113, 113)',
-        primary: '#818CF8',
+        primary: '#59168B',
         secondary: '#27272A',
         linkColor: '#18181B',
-        accent: '#F472B6',
+        accent: '#00D4FF',
         success: '#4ADE80',
         warning: '#FBBF24',
     },

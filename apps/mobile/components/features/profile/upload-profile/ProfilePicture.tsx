@@ -74,8 +74,8 @@ const ProfilePicture = () => {
                     <View
                         className="absolute bottom-0 right-0 p-2 rounded-xl"
                         style={{
-                            backgroundColor: isDark ? '#818CF8' : '#6366F1',
-                            shadowColor: isDark ? '#818CF8' : '#6366F1',
+                            backgroundColor: isDark ? '#59168B' : '#3C0366',
+                            shadowColor: isDark ? '#59168B' : '#3C0366',
                             shadowOffset: { width: 0, height: 2 },
                             shadowOpacity: 0.3,
                             shadowRadius: 4,

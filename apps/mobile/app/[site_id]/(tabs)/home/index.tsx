@@ -17,13 +17,13 @@ export default function Home() {
     const isDark = colorScheme === 'dark'
     const { workspace, switchWorkspace } = useGetCurrentWorkspace()
 
-    // Premium Indigo gradient for header
+    // Premium Purple gradient for header
     const headerGradient = isDark
-        ? ['#312e81', '#4338ca', '#4f46e5'] as const  // indigo-900, 700, 600
-        : ['#4f46e5', '#6366f1', '#818cf8'] as const  // indigo-600, 500, 400
+        ? ['#1A0329', '#2D0A4E', '#3C0366'] as const  // dark purple gradient
+        : ['#3C0366', '#59168B', '#7B2FA0'] as const  // light purple gradient
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: isDark ? '#312e81' : '#4f46e5' }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: isDark ? '#1A0329' : '#3C0366' }}>
             {/* Premium Header with Gradient */}
             <View className="relative overflow-hidden">
                 <LinearGradient

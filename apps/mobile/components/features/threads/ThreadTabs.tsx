@@ -79,7 +79,7 @@ const ThreadTabs = () => {
                                     style={[
                                         isActive && {
                                             backgroundColor: isDark ? '#27272a' : '#ffffff',
-                                            shadowColor: isDark ? '#000' : '#6366F1',
+                                            shadowColor: isDark ? '#000' : '#3C0366',
                                             shadowOffset: { width: 0, height: 2 },
                                             shadowOpacity: isDark ? 0.3 : 0.1,
                                             shadowRadius: 8,
@@ -90,7 +90,7 @@ const ThreadTabs = () => {
                                     <IconComponent
                                         size={16}
                                         color={isActive
-                                            ? (isDark ? '#818CF8' : '#6366F1')
+                                            ? (isDark ? '#59168B' : '#3C0366')
                                             : (isDark ? '#71717a' : '#a1a1aa')
                                         }
                                         strokeWidth={isActive ? 2.5 : 2}

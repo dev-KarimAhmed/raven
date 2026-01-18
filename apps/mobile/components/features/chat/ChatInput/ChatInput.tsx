@@ -62,7 +62,7 @@ const ChatInput = ({ channelID, onSendMessage }: ChatInputProps) => {
         const borderColor = interpolateColor(
             focusAnim.value,
             [0, 1],
-            [isDark ? '#27272a' : '#e4e4e7', isDark ? '#818CF8' : '#6366F1']
+            [isDark ? '#27272a' : '#e4e4e7', isDark ? '#59168B' : '#3C0366']
         )
         return {
             borderColor,
@@ -158,11 +158,11 @@ const ChatInput = ({ channelID, onSendMessage }: ChatInputProps) => {
                                 isBottomMentionSuggestionsRender: false,
                                 trigger: '@',
                                 renderSuggestions: (props) => <UserMentions {...props} channelID={channelID} />,
-                                textStyle: { fontWeight: '600', color: isDark ? '#818CF8' : '#6366F1' },
+                                textStyle: { fontWeight: '600', color: isDark ? '#59168B' : '#3C0366' },
                             },
                             {
                                 pattern: /(https?:\/\/|www\.)[-a-zA-Z0-9@:%._\+~#=]{1,256}\.(xn--)?[a-z0-9-]{2,20}\b([-a-zA-Z0-9@:%_\+\[\],.~#?&\/=]*[-a-zA-Z0-9@:%_\+\]~#?&\/=])*/gi,
-                                textStyle: { color: isDark ? '#818CF8' : '#6366F1', fontSize: 16 },
+                                textStyle: { color: isDark ? '#59168B' : '#3C0366', fontSize: 16 },
                             },
                         ]}
                         style={{
@@ -190,7 +190,7 @@ const ChatInput = ({ channelID, onSendMessage }: ChatInputProps) => {
                                     className="w-10 h-10 flex items-center justify-center rounded-full"
                                     style={{
                                         backgroundColor: hasContent
-                                            ? (isDark ? '#818CF8' : '#6366F1')
+                                            ? (isDark ? '#59168B' : '#3C0366')
                                             : (isDark ? '#27272a' : '#e4e4e7'),
                                         opacity: hasContent ? 1 : 0.5,
                                     }}

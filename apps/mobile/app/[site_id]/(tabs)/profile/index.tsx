@@ -108,7 +108,7 @@ export default function Profile() {
                     >
                         <Text
                             className='text-xl font-cal-sans'
-                            style={{ color: isDark ? '#818CF8' : '#6366F1' }}
+                            style={{ color: isDark ? '#59168B' : '#3C0366' }}
                         >
                             Beam
                         </Text>

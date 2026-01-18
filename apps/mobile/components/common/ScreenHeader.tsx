@@ -27,7 +27,7 @@ const ScreenHeader = ({ title, subtitle, icon: Icon, delay = 0 }: ScreenHeaderPr
                         backgroundColor: isDark ? 'rgba(129, 140, 248, 0.15)' : 'rgba(99, 102, 241, 0.1)',
                     }}
                 >
-                    <Icon size={22} color={isDark ? '#818CF8' : '#6366F1'} strokeWidth={2} />
+                    <Icon size={22} color={isDark ? '#59168B' : '#3C0366'} strokeWidth={2} />
                 </View>
                 <View>
                     <Text className="text-2xl font-bold text-foreground">{title}</Text>

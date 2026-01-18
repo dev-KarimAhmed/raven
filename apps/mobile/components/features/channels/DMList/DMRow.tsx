@@ -68,7 +68,7 @@ const DMRow = ({ dm }: { dm: DMChannelWithUnreadCount }) => {
                             top: '50%',
                             marginTop: -4,
                             borderRadius: 4,
-                            backgroundColor: isDark ? '#818CF8' : '#6366F1',
+                            backgroundColor: isDark ? '#59168B' : '#3C0366',
                         }}
                     />
                 )}
@@ -126,7 +126,7 @@ const DMRow = ({ dm }: { dm: DMChannelWithUnreadCount }) => {
                         {isUnread ? (
                             <View
                                 className="min-w-5 h-5 rounded-full items-center justify-center px-1.5"
-                                style={{ backgroundColor: isDark ? '#818CF8' : '#6366F1' }}
+                                style={{ backgroundColor: isDark ? '#59168B' : '#3C0366' }}
                             >
                                 <Text className="text-white text-xs font-bold">
                                     {dm.unread_count > 99 ? '99+' : dm.unread_count}
@@ -193,7 +193,7 @@ const LastMessageTimestamp = ({ timestamp, isUnread }: LastMessageTimestampProps
     return (
         <Text
             className={`text-xs ${isUnread ? 'font-medium' : 'font-normal'}`}
-            style={{ color: isUnread ? (isDark ? '#818CF8' : '#6366F1') : (isDark ? '#71717a' : '#a1a1aa') }}
+            style={{ color: isUnread ? (isDark ? '#59168B' : '#3C0366') : (isDark ? '#71717a' : '#a1a1aa') }}
         >
             {displayTimestamp}
         </Text>

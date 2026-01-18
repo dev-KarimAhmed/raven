@@ -73,7 +73,7 @@ const AnimatedTabIcon = ({
 
     // Colors based on focus and theme
     const iconColor = focused
-        ? (dark ? '#818CF8' : '#6366F1')  // Indigo when focused
+        ? (dark ? '#59168B' : '#3C0366')  // Indigo when focused
         : (dark ? 'rgba(161, 161, 170, 0.8)' : 'rgba(113, 113, 122, 0.7)'); // Zinc gray when not
 
     return (
@@ -143,7 +143,7 @@ export default function TabLayout() {
         paddingBottom: Platform.OS === 'ios' ? 24 : 12,
         height: Platform.OS === 'ios' ? 88 : 70,
         // Premium shadow
-        shadowColor: dark ? '#000000' : '#6366F1',
+        shadowColor: dark ? '#000000' : '#3C0366',
         shadowOffset: { width: 0, height: -8 },
         shadowOpacity: dark ? 0.5 : 0.08,
         shadowRadius: 24,
@@ -192,7 +192,7 @@ export default function TabLayout() {
             <Tabs
                 screenOptions={{
                     tabBarStyle,
-                    tabBarActiveTintColor: dark ? '#818CF8' : '#6366F1', // Indigo
+                    tabBarActiveTintColor: dark ? '#59168B' : '#3C0366', // Indigo
                     tabBarInactiveTintColor: dark ? '#71717A' : '#A1A1AA', // Zinc
                     tabBarLabelStyle: {
                         fontSize: 11,
