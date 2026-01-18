@@ -61,13 +61,13 @@ const WorkSpaceSwitcherMenu = ({ selectedWorkspace, workspaces, setWorkspace }: 
                 <View className='flex-row items-center gap-2'>
                     <UserAvatar
                         key={logo}
-                        alt={selectedWorkspace?.workspace_name ?? 'Workspace Logo'}
+                        alt="Beam"
                         src={logo}
                         avatarProps={{ className: 'h-10 w-10' }}
                     />
                     <View>
                         <View className='flex-row items-center gap-1'>
-                            <Text className="text-white font-bold">{selectedWorkspace?.workspace_name}</Text>
+                            <Text className="text-white font-bold">Beam</Text>
                             <ChevronDownIcon height={20} width={20} fill={COLORS.white} />
                         </View>
                         <Text className='text-xs text-white/90 overflow-hidden text-ellipsis line-clamp-1'>{urlWithoutProtocol}</Text>
@@ -186,12 +186,12 @@ const WorkspaceRow = ({ workspace, isLast, setWorkspace, isOtherWorkspace = fals
         <Pressable className='flex flex-col gap-2' onPress={onClick}>
             <View className='flex-row items-center gap-2'>
                 <UserAvatar
-                    alt={workspace.workspace_name}
+                    alt="Beam"
                     src={getLogo(workspace)}
                     avatarProps={{ className: 'h-10 w-10 rounded-lg dark:border-border dark:border' }}
                 />
                 <View className='flex-1'>
-                    <Text className='text-sm font-semibold'>{workspace.workspace_name}</Text>
+                    <Text className='text-sm font-semibold'>Beam</Text>
                     <Text className='text-sm text-gray-500'>{workspace.type}</Text>
                 </View>
                 {workspace.isSelected &&

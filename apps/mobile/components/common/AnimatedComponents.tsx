@@ -306,15 +306,19 @@ export const AnimatedGlow = ({
     }, [isActive]);
 
     const animatedStyle = useAnimatedStyle(() => ({
-        shadowColor: glowColor,
-        shadowOffset: { width: 0, height: 0 },
         shadowOpacity: interpolate(shadowOpacity.value, [0, 1], [0, 0.8]),
         shadowRadius: interpolate(shadowOpacity.value, [0, 1], [0, 12]),
         elevation: interpolate(shadowOpacity.value, [0, 1], [0, 8]),
     }));
 
+    // Static shadow properties to avoid new architecture issues
+    const staticShadowStyle = {
+        shadowColor: glowColor,
+        shadowOffset: { width: 0, height: 0 },
+    };
+
     return (
-        <Animated.View style={[animatedStyle, style]}>
+        <Animated.View style={[staticShadowStyle, animatedStyle, style]}>
             {children}
         </Animated.View>
     );

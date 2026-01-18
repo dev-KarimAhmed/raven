@@ -56,9 +56,13 @@ const AddSite = ({ useBottomSheet = false }: Props) => {
             shadowColor: colors.primary,
             shadowOpacity: focusAnim.value * 0.15,
             shadowRadius: focusAnim.value * 10,
-            shadowOffset: { width: 0, height: 0 },
         };
     });
+
+    // Static shadow offset to avoid new architecture issues
+    const staticInputShadowStyle = {
+        shadowOffset: { width: 0, height: 0 },
+    };
 
     const handleFocus = () => {
         setIsFocused(true);
@@ -119,7 +123,7 @@ const AddSite = ({ useBottomSheet = false }: Props) => {
 
             {/* Input Field */}
             <Animated.View
-                style={animatedInputStyle}
+                style={[staticInputShadowStyle, animatedInputStyle]}
                 className={`flex-row items-center rounded-xl ${isDark ? 'bg-zinc-900/50' : 'bg-zinc-50'} px-4 h-14`}
             >
                 <Text className="text-muted-foreground text-base mr-1">https://</Text>
