@@ -126,8 +126,6 @@ const AddSite = ({ useBottomSheet = false }: Props) => {
                 style={[staticInputShadowStyle, animatedInputStyle]}
                 className={`flex-row items-center rounded-xl ${isDark ? 'bg-zinc-900/50' : 'bg-zinc-50'} px-4 h-14`}
             >
-                <Text className="text-muted-foreground text-base mr-1">https://</Text>
-
                 {useBottomSheet ? (
                     <BottomSheetTextInput
                         className={`flex-1 text-base ${isDark ? 'text-white' : 'text-black'}`}

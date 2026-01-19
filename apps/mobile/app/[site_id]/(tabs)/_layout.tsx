@@ -1,6 +1,7 @@
 import React, { useMemo, useEffect, useRef } from 'react';
 import { Stack, Tabs } from 'expo-router';
 import { View, Platform } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Home, MessageCircle, MessagesSquare, User, LucideIcon } from 'lucide-react-native';
 import { useColorScheme } from '@hooks/useColorScheme';
 import useUnreadThreadsCount from '@hooks/useUnreadThreadsCount';
@@ -130,26 +131,27 @@ export default function TabLayout() {
 
     const { colors, colorScheme } = useColorScheme();
     const dark = colorScheme === "dark";
+    const insets = useSafeAreaInsets();
 
-    // Premium glass-morphism tab bar style
+    // Premium glass-morphism tab bar style with safe area support
     const tabBarStyle = {
         position: 'absolute' as const,
-        bottom: 0,
+        bottom: 25,
         left: 0,
         right: 0,
-        backgroundColor: dark ? 'rgba(9, 9, 11, 0.85)' : 'rgba(255, 255, 255, 0.9)',
+        backgroundColor: dark ? 'rgba(9, 9, 11, 0.95)' : 'rgba(255, 255, 255, 0.95)',
         borderTopWidth: 0,
-        paddingTop: 8,
-        paddingBottom: Platform.OS === 'ios' ? 24 : 12,
-        height: Platform.OS === 'ios' ? 88 : 70,
+        paddingTop: 12,
+        paddingBottom: Math.max(insets.bottom, 16) + 8,
+        height: Platform.OS === 'ios' ? 90 + insets.bottom : 80,
         // Premium shadow
         shadowColor: dark ? '#000000' : '#3C0366',
         shadowOffset: { width: 0, height: -8 },
         shadowOpacity: dark ? 0.5 : 0.08,
         shadowRadius: 24,
         elevation: 25,
-        // Subtle top border glow
-        borderTopColor: dark ? 'rgba(129, 140, 248, 0.1)' : 'rgba(99, 102, 241, 0.08)',
+        // Subtle top border
+        borderTopColor: dark ? 'rgba(89, 22, 139, 0.2)' : 'rgba(60, 3, 102, 0.1)',
     };
 
     const headerStyle = {

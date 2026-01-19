@@ -126,7 +126,7 @@ const ChatInput = ({ channelID, onSendMessage }: ChatInputProps) => {
 
     return (
         <View
-            className="flex flex-col gap-2 pt-4 pb-6 px-5"
+            className="flex flex-col gap-2 pt-4 pb-8 px-6 mb-[2px]"
             style={{
                 backgroundColor: isDark ? '#09090b' : '#ffffff',
                 borderTopWidth: 1,
@@ -178,9 +178,10 @@ const ChatInput = ({ channelID, onSendMessage }: ChatInputProps) => {
                         }}
                     />
                 </Animated.View>
+                {/* <View style={{ height: 20 }} /> */}
 
                 {/* Send Button */}
-                <View className="flex-shrink-0 mb-1">
+                <View className="flex-shrink-0 mb-1" style={{ minWidth: 40, width: 40 }}>
                     <ContextMenu.Root>
                         <ContextMenu.Trigger>
                             <Animated.View style={animatedSendStyle}>
@@ -188,19 +189,18 @@ const ChatInput = ({ channelID, onSendMessage }: ChatInputProps) => {
                                     disabled={loading || !hasContent}
                                     android_ripple={{ color: 'rgba(255,255,255,0.2)', borderless: true }}
                                     className="w-10 h-10 flex items-center justify-center rounded-full"
-                                    style={{
-                                        backgroundColor: hasContent
-                                            ? (isDark ? '#59168B' : '#3C0366')
-                                            : (isDark ? '#27272a' : '#e4e4e7'),
-                                        opacity: hasContent ? 1 : 0.5,
-                                    }}
+                                    // style={{
+                                    //     backgroundColor: hasContent
+                                    //         ? (isDark ? '#7B2FA0' : '#59168B')
+                                    //         : (isDark ? '#3f3f46' : '#e4e4e7'),
+                                    // }}
                                     hitSlop={15}
                                     onPress={() => onSend()}
                                     onLongPress={() => { }}
                                 >
                                     <Send
                                         size={18}
-                                        color={hasContent ? '#ffffff' : (isDark ? '#71717a' : '#a1a1aa')}
+                                        color={(isDark ? '#a1a1aa' : '#52525b')}
                                         strokeWidth={2.5}
                                     />
                                 </Pressable>
